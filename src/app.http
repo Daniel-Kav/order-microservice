@@ -1,1 +1,221 @@
-GET http://127.0.0.1:3000
+# Order Service GraphQL API
+
+# Base URL
+@baseUrl = http://localhost:3000/graphql
+
+### 1. Create Order
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation CreateOrder($input: CreateOrderInput!) {
+  createOrder(createOrderInput: $input) {
+    _id
+    userId
+    status
+    paymentStatus
+    totalAmount
+    items {
+      productId
+      quantity
+      price
+    }
+    shippingAddress {
+      street
+      city
+      state
+      zipCode
+      country
+    }
+  }
+}
+
+### Variables for Create Order
+{
+  "input": {
+    "userId": "user123",
+    "items": [
+      {
+        "productId": "prod123",
+        "quantity": 2,
+        "price": 29.99
+      }
+    ],
+    "shippingAddress": {
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10001",
+      "country": "USA"
+    }
+  }
+}
+
+### 2. Get All Orders
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+query {
+  orders {
+    _id
+    userId
+    status
+    paymentStatus
+    totalAmount
+    items {
+      productId
+      quantity
+      price
+    }
+    createdAt
+  }
+}
+
+### 3. Get Order by ID
+# Replace :id with actual order ID
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+query GetOrder($id: ID!) {
+  order(id: $id) {
+    _id
+    userId
+    status
+    paymentStatus
+    totalAmount
+    items {
+      productId
+      quantity
+      price
+    }
+    shippingAddress {
+      street
+      city
+      state
+      zipCode
+      country
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+### Variables for Get Order by ID
+{
+  "id": "YOUR_ORDER_ID"
+}
+
+### 4. Get Orders by User ID
+# Replace :userId with actual user ID
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+query GetOrdersByUser($userId: String!) {
+  ordersByUser(userId: $userId) {
+    _id
+    status
+    paymentStatus
+    totalAmount
+    items {
+      productId
+      quantity
+      price
+    }
+    createdAt
+  }
+}
+
+### Variables for Get Orders by User ID
+{
+  "userId": "user123"
+}
+
+### 5. Update Order
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation UpdateOrder($input: UpdateOrderInput!) {
+  updateOrder(updateOrderInput: $input) {
+    _id
+    status
+    paymentStatus
+    totalAmount
+    items {
+      productId
+      quantity
+      price
+    }
+    updatedAt
+  }
+}
+
+### Variables for Update Order
+{
+  "input": {
+    "id": "YOUR_ORDER_ID",
+    "status": "processing",
+    "items": [
+      {
+        "productId": "prod123",
+        "quantity": 3,
+        "price": 29.99
+      }
+    ]
+  }
+}
+
+### 6. Confirm Payment
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation ConfirmPayment($orderId: ID!) {
+  confirmPayment(orderId: $orderId) {
+    _id
+    status
+    paymentStatus
+    updatedAt
+  }
+}
+
+### Variables for Confirm Payment
+{
+  "orderId": "YOUR_ORDER_ID"
+}
+
+### 7. Cancel Order
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation CancelOrder($orderId: ID!) {
+  cancelOrder(orderId: $orderId) {
+    _id
+    status
+    paymentStatus
+    updatedAt
+  }
+}
+
+### Variables for Cancel Order
+{
+  "orderId": "YOUR_ORDER_ID"
+}
+
+### 8. Delete Order
+POST {{baseUrl}}
+Content-Type: application/json
+X-Request-Type: GraphQL
+
+mutation DeleteOrder($id: ID!) {
+  deleteOrder(id: $id)
+}
+
+### Variables for Delete Order
+{
+  "id": "YOUR_ORDER_ID"
+}
